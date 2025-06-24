@@ -1,7 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import axios from "axios";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 export async function callGemini(prompt: string): Promise<string> {
   try {
@@ -11,9 +14,7 @@ export async function callGemini(prompt: string): Promise<string> {
         contents: [{ parts: [{ text: prompt }] }],
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
 

@@ -5,6 +5,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+/*
+  This is for devs to check and see if their Gemini API Key is actually being loaded from 
+  their .env file. Delete when we move into production!
+
+console.log("Loaded GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
+*/
+
 const Logged_Users = new Logged();
 const BaseSocket = new WebSocketServer({ port: 5050 });
 

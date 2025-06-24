@@ -1,5 +1,7 @@
 import WebSocket from "ws";
 import { callGemini } from "../gemini";
+//import dotenv from "dotenv";
+//dotenv.config();
 
 export interface Datas {
   From: string;
@@ -24,7 +26,7 @@ class User {
       if (ws_ === ws) {
         found = true;
       } else {
-        if (ws_.readyState === ws_.OPEN) {
+        if (ws_.readyState === WebSocket.OPEN) {
           ws_.send(JSON.stringify(message));
         }
       }
@@ -39,23 +41,31 @@ class User {
   async response() {
     const lastMessage = this.Logs[this.Logs.length - 1];
     const prompt = `The user said: "${lastMessage.Text}". Provide a helpful financial insight or response.`;
-
-    const aiResponse = await callGemini(prompt);
-    const responseMessage: Datas = {
-      From: "AI",
-      Date: new Date().toISOString(),
-      Text: aiResponse,
-    };
-
-    // Send response to all logged-in sockets for the user
-    for (let ws_ of this.Logins) {
-      if (ws_.readyState === ws_.OPEN) {
-        ws_.send(JSON.stringify(responseMessage));
+    
+    //Log for prompt being sent to Gemini
+    console.log(`Prompt for Gemini: ${prompt}`);
+  
+    try {
+      const aiResponse = await callGemini(prompt);
+      
+      //Log for Gemini's response
+      console.log(`AI Response: ${aiResponse}`);
+  
+      const responseMessage: Datas = {
+        From: "AI",
+        Date: new Date().toISOString(),
+        Text: aiResponse,
+      };
+  
+      for (let ws_ of this.Logins) {
+        if (ws_.readyState === WebSocket.OPEN) {
+          ws_.send(JSON.stringify(responseMessage));
+        }
       }
+      this.Logs.push(responseMessage);
+    } catch (error) {
+      console.error("Error during Gemini call or response:", error);
     }
-
-    // Store the response in logs
-    this.Logs.push(responseMessage);
   }
 }
 
