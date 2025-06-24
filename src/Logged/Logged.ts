@@ -19,7 +19,7 @@ class User {
     this.Logs.push(message);
   }
 
-  add(message: Datas, ws: WebSocket) {
+  async add(message: Datas, ws: WebSocket) {
     this.Logs.push(message);
     let found: boolean = false;
     for (let ws_ of this.Logins) {
@@ -35,7 +35,7 @@ class User {
       this.Logins.push(ws);
     }
 
-    this.response();
+    await this.response();
   }
 
   async response() {
@@ -72,11 +72,14 @@ class User {
 class Logged {
   Users: { [key: string]: User } = {};
 
-  add(message: Datas, ws: WebSocket) {
+  async add(message: Datas, ws: WebSocket) {
     if (this.Users[message.From] !== undefined) {
-      this.Users[message.From].add(message, ws);
+      await this.Users[message.From].add(message, ws);
     } else {
-      this.Users[message.From] = new User(message.From, message, ws);
+      const newUser = new User(message.From, message, ws);
+      this.Users[message.From] = newUser;
+      await newUser.response();
+
     }
   }
 }

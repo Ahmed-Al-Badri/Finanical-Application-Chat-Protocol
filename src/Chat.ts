@@ -18,16 +18,17 @@ const BaseSocket = new WebSocketServer({ port: 5050 });
 BaseSocket.on("connection", (ws: WebSocket) => {
   console.log("Client connected");
 
-  ws.on("message", (message: string | Buffer) => {
+  ws.on("message", async (message: string | Buffer) => {
     try {
       const raw = typeof message === "string" ? message : message.toString();
       const datas: Datas = JSON.parse(raw);
-      Logged_Users.add(datas, ws);
       console.log("Received message from:", datas.From);
+      await Logged_Users.add(datas, ws);
     } catch (error) {
       console.error("Invalid message received:", message);
     }
   });
+  
 
   ws.on("close", () => {
     console.log("Client disconnected");
