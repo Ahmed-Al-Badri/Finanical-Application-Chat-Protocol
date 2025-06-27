@@ -11,7 +11,7 @@ export async function callGemini(prompt: string): Promise<string> {
     const res = await axios.post(
       `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
       {
-        contents: [{ parts: [{ text: prompt }] }],
+        contents: [{ parts: [{ text: "you are a smart finance chatbot answer the prompt: " + prompt }] }],
       },
       {
         headers: { "Content-Type": "application/json" },
