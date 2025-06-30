@@ -26,3 +26,5 @@ User sends message → server receives and logs → calls Gemini → Gemini repl
 5. I added console logs so you will be able to see who sent the message (From), the message itself as well as the reponse from Gemini
 
 <img width="1142" alt="Screenshot 2025-06-23 at 11 38 58 PM" src="https://github.com/user-attachments/assets/fcdad513-b13b-4aec-b4c7-7d32599d58e6" />
+
+hello!
