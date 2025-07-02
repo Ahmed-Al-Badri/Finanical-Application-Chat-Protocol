@@ -39,24 +39,32 @@ class User {
   }
 
   async response() {
-    const lastMessage = this.Logs[this.Logs.length - 1];
-    const prompt = `The user said: "${lastMessage.Text}". Provide a helpful financial insight or response.`;
-    
-    //Log for prompt being sent to Gemini
+    // Use the last 10 messages for context (adjust as needed)
+    const contextLength = 10;
+    const contextMessages = this.Logs.slice(-contextLength);
+
+    // Build a context string
+    const context = contextMessages
+      .map(msg => `${msg.From}: ${msg.Text}`)
+      .join('\n');
+
+    const prompt = `This is a conversation between a user and a smart finance chatbot. Use the conversation history for context and answer the latest user prompt.\n\nConversation history:\n${context}\n\nAI:`;
+
+    // Log for prompt being sent to Gemini
     console.log(`Prompt for Gemini: ${prompt}`);
-  
+
     try {
       const aiResponse = await callGemini(prompt);
-      
-      //Log for Gemini's response
+
+      // Log for Gemini's response
       console.log(`AI Response: ${aiResponse}`);
-  
+
       const responseMessage: Datas = {
         From: "AI",
         Date: new Date().toISOString(),
         Text: aiResponse,
       };
-  
+
       for (let ws_ of this.Logins) {
         if (ws_.readyState === WebSocket.OPEN) {
           ws_.send(JSON.stringify(responseMessage));

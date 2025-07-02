@@ -27,4 +27,3 @@ User sends message → server receives and logs → calls Gemini → Gemini repl
 
 <img width="1142" alt="Screenshot 2025-06-23 at 11 38 58 PM" src="https://github.com/user-attachments/assets/fcdad513-b13b-4aec-b4c7-7d32599d58e6" />
 
-hello!
